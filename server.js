@@ -127,16 +127,32 @@ app.post('/webhook', (req, res) => {
   const killzone = isKillzone();
   const now      = new Date().toISOString();
 
-  // Update signal state
+  // Update signal state — includes SL/TP and market structure from Python engine
   signalState[inst] = {
-    cisd:     sig,
-    sweep:    parsed.sweep   === true || parsed.sweep   === 'true',
-    h1cisd:   parsed.h1cisd  === true || parsed.h1cisd  === 'true',
-    bsl:      parsed.bsl     === true || parsed.bsl     === 'true',
-    killzone: killzone,
-    session:  session,
-    price:    parsed.price || null,
-    time:     now,
+    cisd:         sig,
+    sweep:        parsed.sweep   === true || parsed.sweep   === 'true',
+    h1cisd:       parsed.h1cisd  === true || parsed.h1cisd  === 'true',
+    bsl:          parsed.bsl     === true || parsed.bsl     === 'true',
+    killzone:     killzone,
+    session:      session,
+    price:        parsed.price        || null,
+    // Market structure
+    h4_structure: parsed.h4_structure || null,
+    h4_hh_hl:     parsed.h4_hh_hl    || false,
+    h4_lh_ll:     parsed.h4_lh_ll    || false,
+    // Signal quality
+    quality:      parsed.quality      || null,
+    blocked_reason: parsed.blocked_reason || null,
+    // Anti-manipulation
+    manipulation:      parsed.manipulation      || false,
+    manip_confidence:  parsed.manip_confidence  || 0,
+    manip_reason:      parsed.manip_reason      || null,
+    // SL/TP
+    sl:  parsed.sl  || null,
+    tp:  parsed.tp  || null,
+    rr:  parsed.rr  || null,
+    atr: parsed.atr || null,
+    time: now,
   };
 
   // Add to log
